@@ -37,9 +37,9 @@ outSR <- IF.SR(returns = edhec$CA, evalShape = T, IFplot = T)
 SDiftr <- IF.SD(returns = edhec$CA)
 SRiftr <- IF.SR(returns = edhec$CA)
 par(mfrow = c(3, 1))
-plot(edhec$CA, lwd = 0.8, ylab = "Returns", main = "CA Hedge Fund Returns")
-plot(SDiftr, lwd = 0.8, main = "IF.SD Transformed Returns")
-plot(SRiftr, lwd = 0.8, main = "IF.SR Transformed Returns")
+plot(edhec$CA, lwd = 0.8, ylab = 'Returns', main = 'CA Hedge Fund Returns')
+plot(SDiftr, lwd = 0.8, main = 'IF.SD Transformed Returns')
+plot(SRiftr, lwd = 0.8, main = 'IF.SR Transformed Returns')
 
 iftrFIA <- IF.mean(returns = edhec$FIA)
 iftrFIAclean <- IF.mean(returns = edhec$FIA, cleanOutliers = T, eff = 0.99)
@@ -62,13 +62,13 @@ SRout <- SR.SE(edhec)
 
 printSE(SRout)
 
-SRout <- SR.SE(edhec, se.method = c("IFiid","IFcor","IFcorAdapt"))
+SRout <- SR.SE(edhec, se.method = c('IFiid','IFcor','IFcorAdapt'))
 printSE(SRout)
 
-SRout <- SR.SE(edhec, se.method = "IFcorAdapt", cleanOutliers = F)
-SRoutClean <- SR.SE(edhec, se.method = "IFcorAdapt", cleanOutliers = T)
+SRout <- SR.SE(edhec, se.method = 'IFcorAdapt', cleanOutliers = F)
+SRoutClean <- SR.SE(edhec, se.method = 'IFcorAdapt', cleanOutliers = T)
 clean.compare <- data.frame(SRout$IFcorAdapt$se, SRoutClean$IFcorAdapt$se)
-names(clean.compare) <- c("With Outliers", "Outliers Cleaned")
+names(clean.compare) <- c('With Outliers', 'Outliers Cleaned')
 row.names(clean.compare) <- names(edhec)
 round(clean.compare, 3)
 
@@ -124,7 +124,7 @@ for(n.id in n){
                      n.id=n.id, phi.id=phi.id)
     
     # SE Computation
-    SRout <- lapply(sim.ts, function(x) SR.SE(x, se.method=c("IFcor", "IFcorPW")))
+    SRout <- lapply(sim.ts, function(x) SR.SE(x, se.method=c('IFcor', 'IFcorPW')))
     SRoutPoint <- sapply(SRout, function(x) x$SR, simplify=TRUE)
     SE.true <- sd(sapply(SRout, function(x) x$SR, simplify=TRUE))
     SE.IFcor <- sapply(SRout, function(x) x$IFcor$se, simplify=TRUE)
