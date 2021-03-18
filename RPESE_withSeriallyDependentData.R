@@ -103,7 +103,7 @@ N <- 5000
 mean <- 0.01
 scale <- 0.15
 df <- 5
-n <- c(60, 120, 240)
+n <- c(120, 240)
 phi <- seq(0.1, 0.5, by=0.1)
 
 # Matrix to store final results
