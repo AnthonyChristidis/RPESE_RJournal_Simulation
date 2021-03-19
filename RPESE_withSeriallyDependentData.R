@@ -103,7 +103,7 @@ N <- 5000
 mean <- 0.01
 scale <- 0.15
 df <- 5
-n <- c(120, 240)
+n <- c(60, 120, 240)
 phi <- seq(0.1, 0.5, by=0.1)
 
 # Matrix to store final results
@@ -129,10 +129,11 @@ for(n.id in n){
     SE.true <- sd(sapply(SRout, function(x) x$SR, simplify=TRUE))
     SE.IFcor <- sapply(SRout, function(x) x$IFcor$se, simplify=TRUE)
     SE.IFcorPW <- sapply(SRout, function(x) x$IFcorPW$se, simplify=TRUE)
-    SE.Andrews <- sqrt(unlist(lapply(sim.ts, function(x) nse.andrews(x=as.vector(x), lag.prewhite=0))))
-    SE.AndrewsPW <-sqrt(unlist(lapply(sim.ts, function(x) nse.andrews(x=as.vector(x), lag.prewhite=1))))
-    SE.NeweyWest <- sqrt(unlist(lapply(sim.ts, function(x) nse.nw(x=as.vector(x), lag.prewhite=0))))
-    SE.NeweyWestPW <- sqrt(unlist(lapply(sim.ts, function(x) nse.nw(x=as.vector(x), lag.prewhite=1))))
+    IFdata <- lapply(sim.ts, function(x) IF.SR(as.vector(x)))
+    SE.Andrews <- unlist(lapply(IFdata, function(x) nse.andrews(x=as.vector(x), lag.prewhite=0)))
+    SE.AndrewsPW <-unlist(lapply(IFdata, function(x) nse.andrews(x=as.vector(x), lag.prewhite=1)))
+    SE.NeweyWest <- unlist(lapply(IFdata, function(x) nse.nw(x=as.vector(x), lag.prewhite=0)))
+    SE.NeweyWestPW <- unlist(lapply(IFdata, function(x) nse.nw(x=as.vector(x), lag.prewhite=1)))
     
     # CI Computation
     CI.IFcor <- 1 - mean((mean(SRoutPoint) >= SRoutPoint - qt(0.975, n.id-1)*SE.IFcor)*
