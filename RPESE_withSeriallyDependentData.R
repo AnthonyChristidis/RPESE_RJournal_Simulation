@@ -104,16 +104,16 @@ mean <- 0.01
 scale <- 0.15
 df <- 5
 n <- c(60, 120, 240)
-phi <- seq(0.1, 0.5, by=0.1)
+phi <- seq(0, 0.5, by=0.1)
 
 # Matrix to store final results
-final.results <- matrix(nrow=0, ncol=5)
+final.results <- matrix(nrow=0, ncol=6)
 
 # Normal distribution case
 for(n.id in n){
   
   # Matrix to store results for phi.id
-  phi.results <- matrix(nrow=6, ncol=5)
+  phi.results <- matrix(nrow=6, ncol=6)
   
   for(phi.id in phi){
     
@@ -158,8 +158,6 @@ for(n.id in n){
   # Aggregating results
   final.results <- rbind(final.results, phi.results)
 }
-
-
 
 
 
