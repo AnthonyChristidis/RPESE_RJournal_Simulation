@@ -8,90 +8,13 @@
 # 
 # ========================================================
 
-# Required libraries
-library(RPESE)
-library(RPEIF)
-
-# ---------------
-# Code Examples
-# ---------------
-
-# Section: Influence Functions for Risk and Performance Estimators
-
-data(edhec)
-class(edhec)
-
-colnames(edhec) <- c('CA', 'CTAG', 'DIS', 'EM', 'EMN', 'ED', 'FIA', 'GM', 'LS', 'MA',
-                     'RV', 'SS', 'FoF')
-
-args(nuisParsFn)
-
-par(mfrow = c(2, 1))
-outSD <- IF.SD(evalShape = T, IFplot = T, nuisPars = nuisParsFn(mu = 0.02, sd = 0.15))
-outSR <- IF.SR(evalShape = T, IFplot = T, nuisPars = nuisParsFn(mu = 0.02, sd = 0.15))
-
-par(mfrow = c(2, 1))
-outSD <- IF.SD(returns = edhec$CA, evalShape = T, IFplot = T)
-outSR <- IF.SR(returns = edhec$CA, evalShape = T, IFplot = T)
-
-SDiftr <- IF.SD(returns = edhec$CA)
-SRiftr <- IF.SR(returns = edhec$CA)
-par(mfrow = c(3, 1))
-plot(edhec$CA, lwd = 0.8, ylab = 'Returns', main = 'CA Hedge Fund Returns')
-plot(SDiftr, lwd = 0.8, main = 'IF.SD Transformed Returns')
-plot(SRiftr, lwd = 0.8, main = 'IF.SR Transformed Returns')
-
-iftrFIA <- IF.mean(returns = edhec$FIA)
-iftrFIAclean <- IF.mean(returns = edhec$FIA, cleanOutliers = T, eff = 0.99)
-par(mfrow = c(2, 1))
-plot(iftrFIA, main = 'FIA IF Transformed Returns', lwd = 0.8)
-plot(iftrFIAclean, main = 'Outlier Cleaned FIA IF Transformed Returns', lwd = 0.8)
-
-iftrFIAcl <- IF.mean(returns = retFIA, cleanOutliers = T)
-PWiftrFIAcl <- IF.mean(returns = retFIA, cleanOutliers = T, prewhiten = T)
-par(mfrow = c(2, 1))
-plot(iftrFIAcl, main = 'FIA Outlier Cleaned Returns', lwd = 0.8)
-plot(PWiftrFIAcl, main = 'Prewhitened FIA Outlier Cleaned Returns', lwd = 0.8)
-
-# Section: Application: Hedge Funds Data Standard Errors with RPESE
-
-args(SD.SE)
-args(SR.SE)
-
-SRout <- SR.SE(edhec)
-
-printSE(SRout)
-
-SRout <- SR.SE(edhec, se.method = c('IFiid','IFcor','IFcorAdapt'))
-printSE(SRout)
-
-SRout <- SR.SE(edhec, se.method = 'IFcorAdapt', cleanOutliers = F)
-SRoutClean <- SR.SE(edhec, se.method = 'IFcorAdapt', cleanOutliers = T)
-clean.compare <- data.frame(SRout$IFcorAdapt$se, SRoutClean$IFcorAdapt$se)
-names(clean.compare) <- c('With Outliers', 'Outliers Cleaned')
-row.names(clean.compare) <- names(edhec)
-round(clean.compare, 3)
-
-SRretCor <- SR.SE(edhec, corOut = c('retCor', 'retIFCor'))
-printSE(SRretCor)
-
-SRall <- SR.SE(edhec, cleanOutliers = T, freq.include = "All")
-SRdecimate <- SR.SE(edhec, cleanOutliers = T, freq.include = 'Decimate',
-                    freq.par = 0.5)
-SRtruncate <- SR.SE(edhec, cleanOutliers = T, freq.include = 'Truncate',
-                    freq.par = 0.5)
-frequency.comparison <- cbind(printSE(SRall)[,3], printSE(SRdecimate)[,3],
-                              printSE(SRtruncate)[,3])
-colnames(frequency.comparison) <- c('IFcorAdapt-All', 'IFcorAdapt-Decimate',
-                                    'IFcorAdapt-Truncate')
-rownames(frequency.comparison) <- names(edhec)
-frequency.comparison
-
-
 # ------------------------
 # Monte Carlo Simulation
 # ------------------------
 
+# Required libraries
+library(RPESE)
+library(RPEIF)
 library(nse)
 library(metRology)
 
