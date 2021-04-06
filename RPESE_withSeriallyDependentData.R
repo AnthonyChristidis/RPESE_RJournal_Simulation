@@ -14,11 +14,11 @@
 
 # Required libraries
 library(RPESE)
-library(RPEIF)
+library(RPEIF) 
 library(nse)
 library(metRology)
 
-# Setting seed 
+# Setting seed  
 set.seed(0)
 
 # Simulation parameters
