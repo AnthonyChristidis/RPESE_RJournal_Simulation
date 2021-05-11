@@ -21,11 +21,11 @@ library(RPEIF)
 # -----------------------------------------------------------------
 
 # Loading the hedge fund data
-install.packages('PerformanceAnalytics')
-data(edhec, package = 'PerformanceAnalytics')
+install.packages("PerformanceAnalytics")
+data(edhec, package = "PerformanceAnalytics")
 class(edhec)
-colnames(edhec) <- c('CA', 'CTAG', 'DIS', 'EM', 'EMN', 'ED', 'FIA', 'GM', 'LS', 'MA',
-                     'RV', 'SS', 'FoF')
+colnames(edhec) <- c("CA", "CTAG", "DIS", "EM", "EMN", "ED", "FIA", "GM", "LS", "MA",
+                     "RV", "SS", "FoF")
 
 # Package functions
 library(RPEIF)
@@ -48,23 +48,23 @@ outSR <- IF.SR(returns = edhec$CA, evalShape = T, IFplot = T)
 SDiftr <- IF.SD(returns = edhec$CA)
 SRiftr <- IF.SR(returns = edhec$CA)
 par(mfrow = c(3, 1))
-plot(edhec$CA, lwd = 0.8, ylab = 'Returns', main = 'CA Hedge Fund Returns')
-plot(SDiftr, lwd = 0.8, main = 'IF.SD Transformed Returns')
-plot(SRiftr, lwd = 0.8, main = 'IF.SR Transformed Returns')
+plot(edhec$CA, lwd = 0.8, ylab = "Returns", main = "CA Hedge Fund Returns")
+plot(SDiftr, lwd = 0.8, main = "IF.SD Transformed Returns")
+plot(SRiftr, lwd = 0.8, main = "IF.SR Transformed Returns")
 
 # IF plot for return series with outlier cleaning
 iftrFIA <- IF.Mean(returns = edhec$FIA)
 iftrFIAclean <- IF.Mean(returns = edhec$FIA, cleanOutliers = T, eff = 0.99)
 par(mfrow = c(2, 1))
-plot(iftrFIA, main = 'FIA IF Transformed Returns', lwd = 0.8)
-plot(iftrFIAclean, main = 'Outlier Cleaned FIA IF Transformed Returns', lwd = 0.8)
+plot(iftrFIA, main = "FIA IF Transformed Returns", lwd = 0.8)
+plot(iftrFIAclean, main = "Outlier Cleaned FIA IF Transformed Returns", lwd = 0.8)
 
 # IF plot for return series with prewhetening
 iftrFIAcl <- IF.Mean(returns = edhec$FIA, cleanOutliers = T)
 PWiftrFIAcl <- IF.Mean(returns = edhec$FIA, cleanOutliers = T, prewhiten = T)
 par(mfrow = c(2, 1))
-plot(iftrFIAcl, main = 'FIA Outlier Cleaned Returns', lwd = 0.8)
-plot(PWiftrFIAcl, main = 'Prewhitened FIA Outlier Cleaned Returns', lwd = 0.8)
+plot(iftrFIAcl, main = "FIA Outlier Cleaned Returns", lwd = 0.8)
+plot(PWiftrFIAcl, main = "Prewhitened FIA Outlier Cleaned Returns", lwd = 0.8)
 
 # ------------------------------------------------------------------
 # Section: Application: Hedge Funds Data Standard Errors with RPESE
@@ -72,7 +72,7 @@ plot(PWiftrFIAcl, main = 'Prewhitened FIA Outlier Cleaned Returns', lwd = 0.8)
 
 # Package functions
 library(RPESE)
-ls('package:RPESE')
+ls("package:RPESE")
 
 # Example function arguments
 args(SD.SE)
@@ -85,40 +85,40 @@ SRout <- SR.SE(edhec)
 printSE(SRout)
 
 # SE computation with methods specification
-SRout <- SR.SE(edhec, se.method = c('IFiid','BOOTiid','IFcor','IFcorPW','BOOTcor'))
+SRout <- SR.SE(edhec, se.method = c("IFiid","BOOTiid","IFcor","IFcorPW","BOOTcor"))
 printSE(SRout)
 
 # SE computatoin with outlier cleaning
-SRout <- SR.SE(edhec, se.method = 'IFcorPW', cleanOutliers = F)
-SRoutClean <- SR.SE(edhec, se.method = 'IFcorPW', cleanOutliers = T)
+SRout <- SR.SE(edhec, se.method = "IFcorPW", cleanOutliers = F)
+SRoutClean <- SR.SE(edhec, se.method = "IFcorPW", cleanOutliers = T)
 clean.compare <- data.frame(SRout$IFcorPW$se, SRoutClean$IFcorPW$se)
-names(clean.compare) <- c('With Outliers', 'Outliers Cleaned')
+names(clean.compare) <- c("With Outliers", "Outliers Cleaned")
 row.names(clean.compare) <- names(edhec)
 round(clean.compare, 3)
 
 # SE computation with correlations output
-SRretCor <- SR.SE(edhec, corOut = c('retCor', 'retIFCor'))
+SRretCor <- SR.SE(edhec, corOut = c("retCor", "retIFCor"))
 printSE(SRretCor)
 
 # SE computation with Exponential-Gamma comparison
-Clean.out <- SR.SE(edhec, se.method=c('IFiid','IFcor','IFcorPW'), cleanOutliers = T)
-GammaClean.out <- SR.SE(edhec, se.method=c('IFiid','IFcor','IFcorPW'), cleanOutliers = T,      
-                        fitting.method = 'Gamma')
+Clean.out <- SR.SE(edhec, se.method=c("IFiid","IFcor","IFcorPW"), cleanOutliers = T)
+GammaClean.out <- SR.SE(edhec, se.method=c("IFiid","IFcor","IFcorPW"), cleanOutliers = T,      
+                        fitting.method = "Gamma")
 GammaExp.comparison <- cbind(printSE(Clean.out)[,4], printSE(GammaClean.out)[,4])
-colnames(GammaExp.comparison) <- c('IFcorPW', 'IFcorPW-Gamma')
+colnames(GammaExp.comparison) <- c("IFcorPW", "IFcorPW-Gamma")
 rownames(GammaExp.comparison) <- names(edhec)
 GammaExp.comparison
 
 # SE computation with frequency comparison
 SRall <- SR.SE(edhec, cleanOutliers = T, freq.include = "All")
-SRdecimate <- SR.SE(edhec, cleanOutliers = T, freq.include = 'Decimate',
+SRdecimate <- SR.SE(edhec, cleanOutliers = T, freq.include = "Decimate",
                     freq.par = 0.5)
-SRtruncate <- SR.SE(edhec, cleanOutliers = T, freq.include = 'Truncate',
+SRtruncate <- SR.SE(edhec, cleanOutliers = T, freq.include = "Truncate",
                     freq.par = 0.5)
 frequency.comparison <- cbind(printSE(SRall)[,3], printSE(SRdecimate)[,3],
                               printSE(SRtruncate)[,3])
-colnames(frequency.comparison) <- c('IFcorPW-All', 'IFcorPW-Decimate',
-                                    'IFcorPW-Truncate')
+colnames(frequency.comparison) <- c("IFcorPW-All", "IFcorPW-Decimate",
+                                    "IFcorPW-Truncate")
 rownames(frequency.comparison) <- names(edhec)
 frequency.comparison
 
@@ -159,7 +159,7 @@ for(n.id in n){
                      n.id=n.id, phi.id=phi.id)
     
     # SE Computation
-    SRout <- lapply(sim.ts, function(x) SR.SE(x, se.method=c('IFcor', 'IFcorPW')))
+    SRout <- lapply(sim.ts, function(x) SR.SE(x, se.method=c("IFcor", "IFcorPW")))
     SRoutPoint <- sapply(SRout, function(x) x$SR, simplify=TRUE)
     SE.true <- sd(sapply(SRout, function(x) x$SR, simplify=TRUE))
     SE.IFcor <- sapply(SRout, function(x) x$IFcor$se, simplify=TRUE)
