@@ -54,7 +54,7 @@ plot(SRiftr, lwd = 0.8, main = "IF.SR Transformed Returns")
 
 # IF plot for return series with outlier cleaning
 iftrFIA <- IF.Mean(returns = edhec$FIA)
-iftrFIAclean <- IF.Mean(returns = edhec$FIA, cleanOutliers = T, eff = 0.99)
+iftrFIAclean <- IF.Mean(returns = edhec$FIA, cleanOutliers = T, eff = 0.95)
 par(mfrow = c(2, 1))
 plot(iftrFIA, main = "FIA IF Transformed Returns", lwd = 0.8)
 plot(iftrFIAclean, main = "Outlier Cleaned FIA IF Transformed Returns", lwd = 0.8)
